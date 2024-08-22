@@ -1,18 +1,18 @@
-local pro = require"./init"
+local promise = require"./init"
 local task = require"@lune/task"
 
-local new = pro.new(function(re)
+promise.new(function(resolve, reject)
+    print(1000) -- 1000
     task.wait(1)
-    re(1000)
-end)
-
-new:connect(function(data)
-    print(data + 1000)
+    resolve(1000)
+end):connect(function(result)
+    print(result + 1000) -- 2000
     task.wait(1)
-    return data + 1000
-end):connect(function(data)
-    print(data + 1000)
-    return data + 1000
-end):connect(function(data)
-    print(data + 1000)
+    return result + 1000
+end):connect(function(result)
+    print(result + 1000) -- 3000
+    task.wait(1)
+    return result + 1000
+end):connect(function(result)
+    print(result + 1000) -- 4000
 end)

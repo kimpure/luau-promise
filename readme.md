@@ -2,21 +2,22 @@ luau promise
 
 use 
 ```lua
-local pro = require"path"
+local promise = require"path"
 local task = require"@lune/task"
 
-local new = pro.new(function(re)
+promise.new(function(resolve, reject)
+    print(1000) -- 1000
     task.wait(1)
-    re(1000)
-end)
-
-new:connect(function(data)
-    -- data = 1000
-    print(data + 1000)
+    resolve(1000)
+end):connect(function(result)
+    print(result + 1000) -- 2000
     task.wait(1)
-    return data + 1000
-end):connect(function(data)
-    --data = 2000
-    print(data + 1000)
+    return result + 1000
+end):connect(function(result)
+    print(result + 1000) -- 3000
+    task.wait(1)
+    return result + 1000
+end):connect(function(result)
+    print(result + 1000) -- 4000
 end)
 ```
