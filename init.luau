@@ -11,6 +11,7 @@ type PromiseImpl = {
 
 export type promise = typeof(setmetatable({} :: {
     resolve: any,
+    catch: { t: boolean, m: string },
 }, {} :: PromiseImpl));
 
 local promise = {} :: PromiseImpl;
@@ -20,21 +21,34 @@ function promise.new(fn)
 
     local self = setmetatable({
         resolve = nil,
+        catch = { t = false, m = '' },
     }, promise)
 
     if fn then
-        fn( function(result)
-            self.resolve = result
-        end, function(errorMessage)
-            error(errorMessage)
+        local s, p = pcall(function()
+            fn( function(result)
+                self.resolve = result
+            end, function(errorMessage)
+                self.catch.t = true
+                self.catch.m = ''
+            end)
         end)
+       
+        if s then
+            self.catch.t = true;
+            self.catch.m = p
+        end
     end
 
     return self;
 end
 
 function promise.connect(self, fn)
-    
+    if self.catch then
+        error('')
+    end
+
+
     if fn then
         local data = fn(self.resolve)
         if data then

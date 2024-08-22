@@ -1,5 +1,22 @@
-프로미스 << 프로미스는 자바스크립트 비동기
- 처리에 사용되는 객체입니다. 
- 여기서 자바스크립트의 비동기 처리란 ‘특정 코드의 실행이 완료될 때까지 기다리지 않고 
- 다음 코드를 먼저 수행하는 자바스크립트의 특성’을 의미합니다. 비동기 처리에 대한 이해가 없으시다면 
- 이전 글 ‘자바스크립트 비동기 처리와 콜백 함수’를 읽어보시길 추천드립니다
+luau promise
+
+use 
+```lua
+local pro = require"path"
+local task = require"@lune/task"
+
+local new = pro.new(function(re)
+    task.wait(1)
+    re(1000)
+end)
+
+new:connect(function(data)
+    -- data = 1000
+    print(data + 1000)
+    task.wait(1)
+    return data + 1000
+end):connect(function(data)
+    --data = 2000
+    print(data + 1000)
+end)
+```
