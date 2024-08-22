@@ -12,4 +12,7 @@ new:connect(function(data)
     return data + 1000
 end):connect(function(data)
     print(data + 1000)
+    return data + 1000
+end):connect(function(data)
+    print(data + 1000)
 end)
